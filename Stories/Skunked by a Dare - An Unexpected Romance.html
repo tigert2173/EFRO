@@ -44,14 +44,20 @@
             margin-bottom: 20px;
         }
 
-	h2 {
+	    h2 {
             text-align: center;
             font-size: 16px;
             margin-bottom: 20px;
         }
+       
+        h3 {
+            text-align: center;
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
 
         p {
-            text-indent: 50px;
+            text-indent: 25px;
             margin-bottom: 20px;
         }
 
@@ -89,7 +95,73 @@
     <br><input type="text" id="nameInput" placeholder="Enter your name">
     <button onclick="personalize()">Submit</button></h2>
 
-
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Character Image Menu</title>
+        <style>
+            .menu {
+                list-style-type: none;
+                padding: 0;
+            }
+            .menu-item {
+                cursor: pointer;
+                padding: 10px;
+                border: 1px solid #ccc;
+                margin-bottom: 5px;
+                background-color: #f9f9f9;
+            }
+            .menu-item:hover {
+                background-color: #eee;
+            }
+            .image-container {
+                display: none;
+                text-align: center;
+                margin-top: 20px;
+            }
+            .image-container img {
+                max-width: 100%;
+                height: auto;
+            }
+        </style>
+    </head>
+    <body>
+    
+        <h3>Character Image Menu</h3>
+        <ul class="menu">
+            <li class="menu-item" onclick="showImage('Aimee')">Aimee</li>
+            <li class="menu-item" onclick="showImage('Pixie')">Pixie</li>
+            <li class="menu-item" onclick="showImage('Snuffles')">Snuffles</li>
+        </ul>
+        <div id="Aimee" class="image-container">
+            <img src="Aimee.png" alt="Aimee">
+        </div>
+        <div id="Pixie" class="image-container">
+            <img src="Pixie.png" alt="Pixie">
+        </div>
+        <div id="Snuffles" class="image-container">
+            <img src="Snuffles.png" alt="Snuffles">
+        </div>
+    
+        <script>
+            function showImage(id) {
+                // Hide all images
+                var images = document.querySelectorAll('.image-container');
+                images.forEach(function(img) {
+                    img.style.display = 'none';
+                });
+    
+                // Show the selected image
+                var selectedImage = document.getElementById(id);
+                selectedImage.style.display = 'block';
+            }
+        </script>
+    
+    </body>
+    </html>
+    
     <p>Aimee sat on the dirty sidewalk, huddled close with a group of other skunk girls. The scent of the city mixed with their own musk, creating an atmosphere that most would find unbearable. But to them, it was home, a sanctuary where they could be themselves without judgment.</p>
 
     <p>They were in the middle of a raucous game of Truth or Dare, laughter echoing down the alleyway. The dim light of a nearby streetlamp flickered above them, casting long shadows across the cracked pavement.</p>
