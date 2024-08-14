@@ -40,38 +40,155 @@
         .story a:hover {
             text-decoration: underline;
         }
+        .search-bar {
+            margin-bottom: 20px;
+        }
+        .search-bar input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .tags {
+            margin-bottom: 20px;
+        }
+        .tag {
+            display: inline-block;
+            background-color: #007BFF;
+            color: #fff;
+            padding: 5px 10px;
+            margin-right: 5px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .tag.selected {
+            background-color: #0056b3;
+        }
+        .navbar {
+            background-color: #007BFF;
+            color: #fff;
+            padding: 15px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px; /* Space below the navbar */
+        }
+        .navbar h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: bold;
+            margin-right: 30px;
+        }
+        .navbar nav {
+            display: flex;
+            align-items: center;
+        }
+        .navbar a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .navbar a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
+    <div class="navbar">
+        <nav>
+            <a href="/EFRO/index.html"">Stories</a>
+            <a href="/EFRO/editor.html">Editor & Posting</a>
+            <a href="#contact">About</a>
+        </nav>
+    </div>
+
     <div class="catalog">
         <h1>Story Catalog</h1>
-
-  	<div class="story">
+        
+        <!-- Search Bar -->
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Search for stories...">
+        </div>
+        
+        <!-- Tagging System -->
+        <div class="tags">
+            <span class="tag" onclick="toggleTagSelection(this, 'Skunk')">Skunk</span>
+            <span class="tag" onclick="toggleTagSelection(this, 'Farts')">Farts</span>
+            <span class="tag" onclick="toggleTagSelection(this, 'Burps')">Burps</span>
+            <span class="tag" onclick="toggleTagSelection(this, 'Fantasy')">Fantasy</span>
+            <span class="tag" onclick="toggleTagSelection(this, 'Romantic Comedy')">Romantic Comedy</span>
+            <span class="tag" onclick="toggleTagSelection(this, 'Adventure')">Adventure</span>
+        </div>
+        
+        <div class="story" data-tags="Skunk, Farts, Burps">
             <h2><a href="/EFRO/Stories/Skunked by a Dare - An Unexpected Romance.html">Skunked by a Dare: An Unexpected Romance</a></h2>
             <p><b>Author:</b> TigerT2173</p>    
             <p><i>Topics:</i> [Skunk], [Farts], [Burps]</p>
             <p>During a game of Truth or Dare, homeless skunk girl, Aimee is dared to ask you out!</p>
         </div>
 
-        <div class="story">
+        <div class="story" data-tags="Fantasy">
             <h2><a href="story1.html">The Skunk Hybrid's Dilemma</a></h2>
             <p><i>Genre:</i> Fantasy</p>
             <p>A tale of a skunk hybrid girl navigating a world where she's seen as an outcast due to her unique abilities and challenges.</p>
         </div>
 
-        <div class="story">
+        <div class="story" data-tags="Romantic Comedy">
             <h2><a href="story2.html">Midnight at MicroCenter</a></h2>
             <p><i>Genre:</i> Romantic Comedy</p>
             <p>A quirky romance unfolds when two socially awkward individuals meet at a computer store after hours.</p>
         </div>
 
-        <div class="story">
+        <div class="story" data-tags="Adventure">
             <h2><a href="story3.html">The Quest for the Perfect PC</a></h2>
             <p><i>Genre:</i> Adventure</p>
             <p>Follow a group of friends as they embark on an epic journey to build the ultimate gaming PC, facing unexpected challenges along the way.</p>
         </div>
-
+        
         <!-- Add more stories as needed -->
     </div>
+
+    <script>
+        const selectedTags = new Set();
+
+        document.getElementById('searchInput').addEventListener('keyup', function() {
+            const input = this.value.toLowerCase();
+            filterStories(input, selectedTags);
+        });
+
+        function toggleTagSelection(tagElement, tag) {
+            if (selectedTags.has(tag)) {
+                selectedTags.delete(tag);
+                tagElement.classList.remove('selected');
+            } else {
+                selectedTags.add(tag);
+                tagElement.classList.add('selected');
+            }
+            filterStories(document.getElementById('searchInput').value.toLowerCase(), selectedTags);
+        }
+
+        function filterStories(input, tags) {
+            const stories = document.getElementsByClassName('story');
+
+            for (let i = 0; i < stories.length; i++) {
+                const story = stories[i];
+                const title = story.getElementsByTagName('h2')[0].innerText.toLowerCase();
+                const storyTags = story.getAttribute('data-tags').split(', ');
+
+                const matchesTitle = title.includes(input);
+                const matchesTags = Array.from(tags).every(tag => storyTags.includes(tag));
+
+                if (matchesTitle && matchesTags) {
+                    story.style.display = '';
+                } else {
+                    story.style.display = 'none';
+                }
+            }
+        }
+    </script>
 </body>
 </html>

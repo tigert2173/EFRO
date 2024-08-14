@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Your Story</title>
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            display: flex;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #fff;
+            border-right: 1px solid #ddd;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            overflow-y: auto;
+        }
+        .sidebar h2 {
+            font-size: 20px;
+            margin-top: 0;
+        }
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+        .sidebar ul li {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .sidebar ul li a {
+            text-decoration: none;
+            color: #007BFF;
+            cursor: pointer;
+        }
+        .sidebar ul li a:hover {
+            text-decoration: underline;
+        }
+        .delete-btn {
+            background: #ff6b6b;
+            border: none;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            text-align: center;
+            line-height: 20px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .delete-btn:hover {
+            background: #ff3b3b;
+        }
+        .container {
+            margin-left: 305px; /* Adjusted to fit the sidebar */
+            margin-right: 10px;
+            padding: 40px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            flex: 1;
+            max-width: calc(100% - 270px);
+        }
+        .output {
+            margin-top: 20px;
+        }
+        .ql-container {
+            height: 200px;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        textarea {
+            width: 100%;
+            height: 200px;
+            margin-bottom: 20px;
+            padding: 10px;
+            font-family: monospace;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            display: none;
+        }
+        input[type="file"] {
+            display: block;
+            margin-bottom: 10px;
+        }
+        .background {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .back-link {
+            display: block;
+            margin: 20px 0;
+            text-align: center;
+            color: #007BFF;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Stories</h2>
+	<p><i>**Disclamer: Always back up your files also!</i></p>
+        <ul id="storyList"></ul>
+        <input type="file" id="fileInput" accept=".docx" />
+        <button onclick="loadFile()">Load File</button>
+        <button onclick="saveStory()">Save Story</button>
+        <button onclick="downloadFile()">Download HTML</button>
+    </div>
+    <div class="container">
+        <h1>Create Your Story</h1>
+        <div id="editor-container"></div>
+        <button onclick="generateHTML()">Generate HTML</button>
+        <div class="output">
+            <h2>Generated HTML</h2>
+            <textarea id="htmlOutput" readonly></textarea>
+        </div>
+    </div>
+
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.2/mammoth.browser.min.js"></script>
+    <script>
+        // Initialize Quill editor
+        var quill = new Quill('#editor-container', {
+            theme: 'snow',
+            modules: {
+                toolbar: [
+                    [{ 'header': '1' }, { 'header': '2' }],
+                    ['bold', 'italic', 'underline'],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    [{ 'align': [] }],
+                    ['link', 'image'],
+                    [{ 'color': [] }, { 'background': [] }],
+                    [{ 'font': [] }],
+                    [{ 'size': ['small', 'medium', 'large', 'huge'] }]
+                ]
+            }
+        });
+
+        function generateHTML() {
+ 	    // Retrieve the HTML content from the Quill editor
+            const html = quill.root.innerHTML;
+            // Update the output textarea with the HTML content
+            document.getElementById('htmlOutput').value = `
+            <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                    var content = document.getElementById('content').innerText;
+                    var firstLine = content.split('\\n')[0];
+                    document.title = firstLine;
+                });
+            <\/script>
+		<head>
+   		<meta charset="UTF-8">
+    		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    		<title>Dynamic Title</title>
+    		<style>
+        	body {
+            		font-family: 'Georgia', serif;
+            		background-color: #fdfaf4;
+            		margin: 0;
+            		padding: 0;
+            		display: flex;
+            		justify-content: center;
+            		align-items: center;
+            		min-height: 100vh;
+        		}
+		    .paper {
+            		background: #fff url('https://www.transparenttextures.com/patterns/old-mathematics.png') repeat center center;
+            		width: 80%;
+            		max-width: 800px;
+            		min-height: 90vh;
+            		padding: 40px;
+            		border: 1px solid #ddd;
+           		box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+           		margin: 20px;
+            		line-height: 1.6;
+            		color: #333;
+        		}
+        	.back-link:hover {
+            		text-decoration: underline;
+        		}	
+		   </style>
+	    </head>
+			
+		<body>
+            <div class="paper">
+		    <a class="back-link" href="/EFRO/index.html">Back to Story Catalog</a>
+		    <div id="content">
+                ${html}
+		    </div>
+		    <a class="back-link" href="/EFRO/index.html">Back to Story Catalog</a>
+                </div>
+        </body>
+            `;
+            // Show the output textarea if it's hidden
+            document.getElementById('htmlOutput').style.display = 'block';
+        }
+        
+        
+        function downloadFile() {
+    // Retrieve the HTML content from the Quill editor
+    const html = quill.root.innerHTML;
+
+    // Use DOMParser to parse the HTML content
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+
+    // Extract the first line of text
+    let firstLineText = '';
+    const paragraphs = doc.querySelectorAll('p');
+    if (paragraphs.length > 0) {
+        firstLineText = paragraphs[0].textContent.trim().split('\n')[0];
+    } else {
+        firstLineText = doc.body.textContent.trim().split('\n')[0];
+    }
+
+    // Fallback to a default filename if firstLineText is empty
+    const fileName = firstLineText || 'Untitled_Story';
+
+    // Create the HTML file content
+    const fileContent = `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>${fileName}</title>
+            <style>
+                body {
+                    font-family: 'Georgia', serif;
+                    background-color: #fdfaf4;
+                    margin: 0;
+                    padding: 0;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    min-height: 100vh;
+                }
+                .paper {
+                    background: #fff url('https://www.transparenttextures.com/patterns/old-mathematics.png') repeat center center;
+                    width: 80%;
+                    max-width: 800px;
+                    min-height: 90vh;
+                    padding: 40px;
+                    border: 1px solid #ddd;
+                    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+                    margin: 20px;
+                    line-height: 1.6;
+                    color: #333;
+                }
+                .back-link {
+                    color: #007BFF;
+                    text-decoration: none;
+                }
+                .back-link:hover {
+                    text-decoration: underline;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="paper">
+                <a class="back-link" href="/EFRO/index.html">Back to Story Catalog</a>
+                ${html}
+                <a class="back-link" href="/EFRO/index.html">Back to Story Catalog</a>
+            </div>
+        </body>
+        </html>
+    `;
+
+    // Create a Blob from the file content
+    const blob = new Blob([fileContent], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+
+    // Create a link element and trigger the download
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${fileName}.html`;
+    a.click();
+
+    // Clean up
+    URL.revokeObjectURL(url);
+}
+
+function downloadFile() {
+    // Retrieve the HTML content from the Quill editor
+    const html = quill.root.innerHTML;
+
+    // Use DOMParser to parse the HTML content
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+
+    // Extract the first line of text
+    let firstLineText = '';
+    const paragraphs = doc.querySelectorAll('p');
+    if (paragraphs.length > 0) {
+        firstLineText = paragraphs[0].textContent.trim().split('\n')[0];
+    } else {
+        firstLineText = doc.body.textContent.trim().split('\n')[0];
+    }
+
+    // Fallback to a default filename if firstLineText is empty
+    const fileName = sanitizeFilename(firstLineText) || 'Untitled_Story';
+
+    // Read the HTML file contents
+    const fileContent = `${html}`;
+
+    // Create a Blob from the file content
+    const blob = new Blob([fileContent], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+
+    // Create a link element and trigger the download
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${fileName}.html`;
+    a.click();
+
+    // Clean up
+    URL.revokeObjectURL(url);
+}
+
+
+// Function to sanitize the filename
+function sanitizeFilename(filename) {
+    // Replace characters that are not allowed in filenames with underscores
+    return filename.replace(/[\/\\?%*:|"<>]/g, '_');
+}
+        
+
+        function loadFile() {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const arrayBuffer = event.target.result;
+                    mammoth.convertToHtml({ arrayBuffer: arrayBuffer })
+                        .then(result => {
+                            // Insert the raw HTML content into the Quill editor
+                            quill.root.innerHTML = result.value;
+                        })
+                        .catch(handleError);
+                };
+                reader.readAsArrayBuffer(file);
+            }
+        }
+
+        function handleError(err) {
+            console.error('Error converting file:', err);
+        }
+
+        function saveStory() {
+            const title = prompt('Enter a title for the story:');
+            if (title) {
+                const stories = JSON.parse(localStorage.getItem('stories') || '{}');
+                stories[title] = quill.root.innerHTML;
+                localStorage.setItem('stories', JSON.stringify(stories));
+                updateStoryList();
+            }
+        }
+
+        function deleteStory(title) {
+            if (confirm(`Are you sure you want to delete "${title}"?`)) {
+                const stories = JSON.parse(localStorage.getItem('stories') || '{}');
+                delete stories[title];
+                localStorage.setItem('stories', JSON.stringify(stories));
+                updateStoryList();
+            }
+        }
+
+        function loadStory(title) {
+            const stories = JSON.parse(localStorage.getItem('stories') || '{}');
+            if (stories[title]) {
+                quill.root.innerHTML = stories[title];
+            }
+        }
+
+        function updateStoryList() {
+            const storyList = document.getElementById('storyList');
+            const stories = JSON.parse(localStorage.getItem('stories') || '{}');
+            storyList.innerHTML = '';
+            for (const title in stories) {
+                const li = document.createElement('li');
+                const link = document.createElement('a');
+                link.textContent = title;
+                link.onclick = () => loadStory(title);
+                const deleteBtn = document.createElement('button');
+                deleteBtn.textContent = 'x';
+                deleteBtn.className = 'delete-btn';
+                deleteBtn.onclick = (event) => {
+                    event.stopPropagation(); // Prevent link click
+                    deleteStory(title);
+                };
+                li.appendChild(link);
+                li.appendChild(deleteBtn);
+                storyList.appendChild(li);
+            }
+        }
+
+        window.onload = updateStoryList;
+    </script>
+</body>
+</html>
