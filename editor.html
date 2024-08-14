@@ -122,12 +122,18 @@
         .back-link:hover {
             text-decoration: underline;
         }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
     </style>
+    
 </head>
 <body>
     <div class="sidebar">
         <h2>Stories</h2>
-	<p><i>**Disclamer: Always back up your files also!</i></p>
+	<p><i>**Disclamer: Always back up your files! We do not store editor files they are stored locally in your browser.</i></p>
         <ul id="storyList"></ul>
         <input type="file" id="fileInput" accept=".docx" />
         <button onclick="loadFile()">Load File</button>
@@ -137,10 +143,38 @@
     <div class="container">
         <h1>Create Your Story</h1>
         <div id="editor-container"></div>
+
+        <a href="https://forms.gle/4GBimXuE8newHkpq8" target="_blank">Form to upload your story!</a>
+        <h2>Enter your story details below:
+        <div class="form-group">
+        <input type="text" id="userInput" placeholder="Author"></div>
+        <div class="form-group">
+        <input type="text" id="userInput1" placeholder="Tags (seperated by commas)"></div>
+        <div class="form-group">
+        <input type="text" id="userInput2" placeholder="Description"></div></h2>
+
+        <script>
+            function storeInput() {
+                // Get the value from the input field
+                var input = document.getElementById("userInput").value;
+                var input1 = document.getElementById("userInput1").value;
+                var input2 = document.getElementById("userInput2").value;
+
+                // Store the input in a variable
+                var author = input;
+                var tags = input1;
+                var description = input2;                
+            }
+        </script>
+
         <button onclick="generateHTML()">Generate HTML</button>
         <div class="output">
             <h2>Generated HTML</h2>
             <textarea id="htmlOutput" readonly></textarea>
+        </div>
+        <div class="output">
+            <h2>Generated Details</h2>
+            <textarea id="detailsOutput" readonly></textarea>
         </div>
     </div>
 
@@ -221,10 +255,69 @@
             `;
             // Show the output textarea if it's hidden
             document.getElementById('htmlOutput').style.display = 'block';
+        
         }
-        
-        
-        function downloadFile() {
+
+    function generateDetails() {
+        const html = quill.root.innerHTML;
+
+    // Use DOMParser to parse the HTML content
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+
+    // Extract the first line of text
+    let firstLineText = '';
+    const paragraphs = doc.querySelectorAll('p');
+    if (paragraphs.length > 0) {
+        firstLineText = paragraphs[0].textContent.trim().split('\n')[0];
+    } else {
+        firstLineText = doc.body.textContent.trim().split('\n')[0];
+    }
+
+    // Fallback to a default filename if firstLineText is empty
+    const fileName = sanitizeFilename(firstLineText) || 'Untitled_Story';
+
+function storeInput() {
+            // Get the value from the input field
+            var userInput = document.getElementById("userInput").value;
+            var userInput1 = document.getElementById("userInput1").value;
+            var userInput2 = document.getElementById("userInput2").value;
+
+            // Store the value in a variable (for demonstration)
+            var author = userInput;
+            var tags = userInput1;
+            var description = userInput2;
+
+        }
+
+          // Get the value from the input field
+          var input = document.getElementById("userInput").value;
+          var input1 = document.getElementById("userInput1").value;
+          var input2 = document.getElementById("userInput2").value;
+
+
+// Store the input in a variable
+var author = input;
+var tags = input1;
+var description = input2;
+
+    // Read the HTML file contents
+    const fileContent = `${html}`;
+    document.getElementById('detailsOutput').value = `
+        <div class="story" data-tags=${tags}>
+            <h2><a href="/EFRO/Stories/${fileName}.html">${fileName}</a></h2>
+            <p><b>Author:</b> ${author}</p>    
+            <p><i>Topics:</i> ${tags}</p>
+            <p>${description}</p>
+        <\/div>
+    `;
+
+    //<p>${description}</p>
+    // Show the output textarea if it's hidden
+    document.getElementById('detailsOutput').style.display = 'block'; 
+    }
+
+    function downloadFile() {
     // Retrieve the HTML content from the Quill editor
     const html = quill.root.innerHTML;
 
@@ -246,52 +339,9 @@
 
     // Create the HTML file content
     const fileContent = `
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>${fileName}</title>
-            <style>
-                body {
-                    font-family: 'Georgia', serif;
-                    background-color: #fdfaf4;
-                    margin: 0;
-                    padding: 0;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    min-height: 100vh;
-                }
-                .paper {
-                    background: #fff url('https://www.transparenttextures.com/patterns/old-mathematics.png') repeat center center;
-                    width: 80%;
-                    max-width: 800px;
-                    min-height: 90vh;
-                    padding: 40px;
-                    border: 1px solid #ddd;
-                    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-                    margin: 20px;
-                    line-height: 1.6;
-                    color: #333;
-                }
-                .back-link {
-                    color: #007BFF;
-                    text-decoration: none;
-                }
-                .back-link:hover {
-                    text-decoration: underline;
-                }
-            </style>
-        </head>
-        <body>
-            <div class="paper">
-                <a class="back-link" href="/EFRO/index.html">Back to Story Catalog</a>
+       
                 ${html}
-                <a class="back-link" href="/EFRO/index.html">Back to Story Catalog</a>
-            </div>
-        </body>
-        </html>
+              
     `;
 
     // Create a Blob from the file content
@@ -309,6 +359,8 @@
 }
 
 function downloadFile() {
+    generateHTML();
+    generateDetails();
     // Retrieve the HTML content from the Quill editor
     const html = quill.root.innerHTML;
 
