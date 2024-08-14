@@ -177,12 +177,14 @@
             for (let i = 0; i < stories.length; i++) {
                 const story = stories[i];
                 const title = story.getElementsByTagName('h2')[0].innerText.toLowerCase();
+                const description = story.getElementsByTagName('p')[0].innerText.toLowerCase();
                 const storyTags = story.getAttribute('data-tags').split(', ');
 
                 const matchesTitle = title.includes(input);
+                const matchesDescription = author.includes(input);
                 const matchesTags = Array.from(tags).every(tag => storyTags.includes(tag));
 
-                if (matchesTitle && matchesTags) {
+                if (matchesTitle || matchesDescription && matchesTags) {
                     story.style.display = '';
                 } else {
                     story.style.display = 'none';
