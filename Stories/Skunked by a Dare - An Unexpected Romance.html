@@ -79,11 +79,86 @@
         .back-link:hover {
             text-decoration: underline;
         }
+	     .slider-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            background: #f1f1f1;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .slider-container input {
+            margin-top: 10px;
+        }
+        .menu-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 30px;
+            height: 30px;
+            background: #333;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 18px;
+            text-align: center;
+        }
+        .menu-button span {
+            display: block;
+            width: 20px;
+            height: 2px;
+            background: #fff;
+            margin: 5px 0;
+        }
     </style>
 </head>
 <body>
         
  <div class="paper">
+	     <button class="menu-button" id="menuButton">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="slider-container" id="sliderContainer">
+        <label for="fontSizeSlider">Font Size:</label>
+        <input type="range" id="fontSizeSlider" min="10" max="40" value="16">
+    </div>
+
+    <script>
+        const menuButton = document.getElementById('menuButton');
+        const sliderContainer = document.getElementById('sliderContainer');
+        const slider = document.getElementById('fontSizeSlider');
+        const body = document.body;
+
+        menuButton.addEventListener('click', () => {
+            if (sliderContainer.style.display === 'none' || sliderContainer.style.display === '') {
+                sliderContainer.style.display = 'flex';
+            } else {
+                sliderContainer.style.display = 'none';
+            }
+        });
+
+        slider.addEventListener('input', function() {
+            const fontSize = slider.value + 'px';
+            body.style.fontSize = fontSize;
+        });
+
+        document.addEventListener('click', (event) => {
+            if (!sliderContainer.contains(event.target) && !menuButton.contains(event.target)) {
+                sliderContainer.style.display = 'none';
+            }
+        });
+</script>
 	<a class="back-link" href="/EFRO/index.html">Back to Story Catalog</a>
 	<h1>Skunked by a Dare: <br>An Unexpected Romance</h1>
 
