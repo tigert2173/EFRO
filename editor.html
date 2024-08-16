@@ -204,13 +204,13 @@
             const html = quill.root.innerHTML;
             // Update the output textarea with the HTML content
             document.getElementById('htmlOutput').value = `
-            <script>
+               <script>
                     document.addEventListener('DOMContentLoaded', function() {
                     var content = document.getElementById('content').innerText;
-                    var firstLine = content.split('\\n')[0];
+                    var firstLine = content.split('\n')[0];
                     document.title = firstLine;
                 });
-            <\/script>
+            </script>
 		<head>
    		<meta charset="UTF-8">
     		<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -226,6 +226,43 @@
             		align-items: center;
             		min-height: 100vh;
         		}
+				h1 {
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+	    h2 {
+            text-align: center;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+       
+        h3 {
+            text-align: center;
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        p {
+            text-indent: 25px;
+            margin-bottom: 20px;
+        }
+
+        h5 {
+            text-indent: 0px;
+            font-size: 12px;
+            margin-bottom: 20px;
+            font-weight: lighter;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #007BFF;
+        }
 		    .paper {
             		background: #fff url('https://www.transparenttextures.com/patterns/old-mathematics.png') repeat center center;
             		width: 80%;
@@ -247,8 +284,47 @@
 		<body>
             <div class="paper">
 		    <a class="back-link" href="/EFRO/index.html">Back to Story Catalog</a>
+			<script>
+				function personalizename() {
+					 const name = document.getElementById("nameInput").value;
+					const userPlaceholders = document.querySelectorAll(".user");
+					userPlaceholders.forEach(function(element) {
+						element.textContent = name;
+					});
+				}
+			</script>
+			
+			<script>
+				function personalizename() {
+					 const name = document.getElementById("nameInput").value;
+					const userPlaceholders = document.querySelectorAll(".user");
+					userPlaceholders.forEach(function(element) {
+						element.textContent = name;
+					});
+				}
+			</script>
+			
+			<script>
+				function personalizecharname() {
+					 const name = document.getElementById("charnameInput").value;
+					const userPlaceholders = document.querySelectorAll(".char");
+					userPlaceholders.forEach(function(element) {
+						element.textContent = name;
+					});
+				}
+			</script>
+			
+			//<h2 align="center">Please enter your name:
+			//	<br><input type="text" id="nameInput" placeholder="Enter your name">
+			//	<button onclick="personalizename()">Submit</button></h2>
+			
+			//<h2 align="center">Please enter character's name:
+			//	<br><input type="text" id="charnameInput" placeholder="Enter character's name">
+			//	<button onclick="personalizecharname()">Submit</button></h2>
+				
+			//	<h5 align="center"><em>**Disclaimer: this information is only used so the story feels more immersive to the readers!</em></h5>
 		    <div id="content">
-                ${html}
+                	${html}
 		    </div>
 		    <a class="back-link" href="/EFRO/index.html">Back to Story Catalog</a>
                 </div>
@@ -383,13 +459,13 @@ function downloadFile() {
 
     // Read the HTML file contents
     const fileContent = `
-    <script>
+        <script>
                     document.addEventListener('DOMContentLoaded', function() {
                     var content = document.getElementById('content').innerText;
-                    var firstLine = content.split('\\n')[0];
+                    var firstLine = content.split('\n')[0];
                     document.title = firstLine;
                 });
-            <\/script>
+            </script>
 		<head>
    		<meta charset="UTF-8">
     		<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -405,6 +481,43 @@ function downloadFile() {
             		align-items: center;
             		min-height: 100vh;
         		}
+				h1 {
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+	    h2 {
+            text-align: center;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+       
+        h3 {
+            text-align: center;
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        p {
+            text-indent: 25px;
+            margin-bottom: 20px;
+        }
+
+        h5 {
+            text-indent: 0px;
+            font-size: 12px;
+            margin-bottom: 20px;
+            font-weight: lighter;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #007BFF;
+        }
 		    .paper {
             		background: #fff url('https://www.transparenttextures.com/patterns/old-mathematics.png') repeat center center;
             		width: 80%;
@@ -426,8 +539,47 @@ function downloadFile() {
 		<body>
             <div class="paper">
 		    <a class="back-link" href="/EFRO/index.html">Back to Story Catalog</a>
+			<script>
+				function personalizename() {
+					 const name = document.getElementById("nameInput").value;
+					const userPlaceholders = document.querySelectorAll(".user");
+					userPlaceholders.forEach(function(element) {
+						element.textContent = name;
+					});
+				}
+			</script>
+			
+			<script>
+				function personalizename() {
+					 const name = document.getElementById("nameInput").value;
+					const userPlaceholders = document.querySelectorAll(".user");
+					userPlaceholders.forEach(function(element) {
+						element.textContent = name;
+					});
+				}
+			</script>
+			
+			<script>
+				function personalizecharname() {
+					 const name = document.getElementById("charnameInput").value;
+					const userPlaceholders = document.querySelectorAll(".char");
+					userPlaceholders.forEach(function(element) {
+						element.textContent = name;
+					});
+				}
+			</script>
+			
+			<h2 align="center">Please enter your name:
+				<br><input type="text" id="nameInput" placeholder="Enter your name">
+				<button onclick="personalizename()">Submit</button></h2>
+			
+			<h2 align="center">Please enter character's name:
+				<br><input type="text" id="charnameInput" placeholder="Enter character's name">
+				<button onclick="personalizecharname()">Submit</button></h2>
+				
+				<h5 align="center"><em>**Disclaimer: this information is only used so the story feels more immersive to the readers!</em></h5>
 		    <div id="content">
-                ${html}
+                	${html}
 		    </div>
 		    <a class="back-link" href="/EFRO/index.html">Back to Story Catalog</a>
                 </div>
