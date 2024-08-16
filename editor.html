@@ -340,9 +340,55 @@ var description = input2;
 
     // Create the HTML file content
     const fileContent = `
-       
+                   <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                    var content = document.getElementById('content').innerText;
+                    var firstLine = content.split('\\n')[0];
+                    document.title = firstLine;
+                });
+            <\/script>
+		<head>
+   		<meta charset="UTF-8">
+    		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    		<title>Dynamic Title</title>
+    		<style>
+        	body {
+            		font-family: 'Georgia', serif;
+            		background-color: #fdfaf4;
+            		margin: 0;
+            		padding: 0;
+            		display: flex;
+            		justify-content: center;
+            		align-items: center;
+            		min-height: 100vh;
+        		}
+		    .paper {
+            		background: #fff url('https://www.transparenttextures.com/patterns/old-mathematics.png') repeat center center;
+            		width: 80%;
+            		max-width: 800px;
+            		min-height: 90vh;
+            		padding: 40px;
+            		border: 1px solid #ddd;
+           		box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+           		margin: 20px;
+            		line-height: 1.6;
+            		color: #333;
+        		}
+        	.back-link:hover {
+            		text-decoration: underline;
+        		}	
+		   </style>
+	    </head>
+			
+		<body>
+            <div class="paper">
+		    <a class="back-link" href="/EFRO/index.html">Back to Story Catalog</a>
+		    <div id="content">
                 ${html}
-              
+		    </div>
+		    <a class="back-link" href="/EFRO/index.html">Back to Story Catalog</a>
+                </div>
+        </body>
     `;
 
     // Create a Blob from the file content
