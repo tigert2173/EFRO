@@ -300,9 +300,9 @@
             const userName = prompt('Enter a name for the new character:');
             if (userName) {
                 settings.userName = userName;
+                saveCharacter();
                 updateSettings();
                 updateCharacterList();
-                saveCharacter();
             }
         }
 
@@ -428,14 +428,7 @@ function extractValue(jsonString, keyword) {
 
         function updateSettings() {
             
-
-            if (messagessent.value > 0) {
-                settings.persona = '';
-                settings.context = '';
-                settings.greeting = '';
-                settings.temperature = parseFloat(document.getElementById('temperature').value);
-                settings.model = document.getElementById('model').value;
-            } else if (messagessent.value > 1) {
+            if (messagessent.value > 2) {
                 settings.persona = document.getElementById('persona').value;
                 settings.context = document.getElementById('context').value;
                 settings.greeting = '';
