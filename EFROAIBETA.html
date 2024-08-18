@@ -335,6 +335,7 @@
         }
 
         function loadCharacter(userName, listItem) {
+            clearCurrentBotMessage();
             const characterData = localStorage.getItem('chatbotCharacter_' + userName);
             if (characterData) {
                 settings = JSON.parse(characterData);
