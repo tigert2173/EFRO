@@ -383,6 +383,7 @@ function uploadCharacter() {
         };
         reader.readAsText(file);
         addNewCharacter();
+        saveCharacter();
     } else {
         alert('Please select a file to upload.');
     }
