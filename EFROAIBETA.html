@@ -356,29 +356,43 @@
         }
 
         function uploadCharacter() {
-            const fileInput = document.getElementById('upload-json');
-            const file = fileInput.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    try {
-                        const jsonData = JSON.parse(event.target.result);
-                        if (jsonData.userName) {
-                            localStorage.setItem('chatbotCharacter_' + jsonData.userName, JSON.stringify(jsonData));
-                            updateCharacterList();
-                            alert('Character uploaded successfully!');
-                        } else {
-                            alert('Invalid JSON format. Ensure it contains a userName field.');
-                        }
-                    } catch (e) {
-                        alert('Failed to parse JSON.');
-                    }
-                };
-                reader.readAsText(file);
-            } else {
-                alert('Please select a file to upload.');
+    const fileInput = document.getElementById('upload-json');
+    const file = fileInput.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            try {
+                const jsonData = JSON.parse(event.target.result);
+
+                // Check for the expected fields in the JSON
+                if (jsonData.char_persona && jsonData.char_greeting && jsonData.world_scenario) {
+                    // Update the HTML elements with the JSON data
+                    document.getElementById('persona').value = jsonData.char_persona;
+                    document.getElementById('context').value = jsonData.world_scenario;
+                    document.getElementById('greeting').value = jsonData.char_greeting;
+                    document.getElementById('temperature').value = jsonData.temperature || 0.5; // Default value if temperature is not provided
+
+                    alert('Character uploaded and settings updated successfully!');
+                } else {
+                    alert('Invalid JSON format. Ensure it contains the necessary fields.');
+                }
+            } catch (e) {
+                alert('Failed to parse JSON.');
             }
-        }
+        };
+        reader.readAsText(file);
+        addNewCharacter();
+    } else {
+        alert('Please select a file to upload.');
+    }
+}
+
+// Helper function to extract values based on a keyword
+function extractValue(jsonString, keyword) {
+    const regex = new RegExp(`${keyword}:\\s*"([^"]+)"`, 'i');
+    const match = jsonString.match(regex);
+    return match ? match[1] : '';
+}
 
         function updateSettings() {
             
