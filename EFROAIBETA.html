@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chatbot - TavernAI Style</title>
+    <title>EFROChatbots - BETA</title>
     <style>
         body {
             font-family: 'Roboto', sans-serif;
@@ -13,6 +13,20 @@
             display: flex;
             flex-direction: row;
             color: #f5f6fa;
+        }
+        #branding {
+            width: 100%;
+            background-color: #1e272e; /* Match the page background */
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #44bd32; /* Optional border for better separation */
+        }
+
+        #branding h1 {
+            color: #44bd32;
+            font-size: 2em;
+            margin: 0;
+            text-shadow: 0 0 10px #44bd32; /* Green glowing effect */
         }
         #sidebar {
             width: 250px;
@@ -191,6 +205,10 @@
     </div>
 
     <div id="main-content">
+        <div id="branding">
+            <h1>BETA EFRO.AI Chatbots</h1>
+        </div>        
+    
         <div id="chat-container"></div>
 
         <div id="input-container">
