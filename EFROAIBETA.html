@@ -301,8 +301,8 @@
             if (userName) {
                 settings.userName = userName;
                 updateSettings();
-                saveCharacter();
                 updateCharacterList();
+                saveCharacter();
             }
         }
 
@@ -383,7 +383,6 @@ function uploadCharacter() {
         };
         reader.readAsText(file);
         addNewCharacter();
-        saveCharacter();
     } else {
         alert('Please select a file to upload.');
     }
