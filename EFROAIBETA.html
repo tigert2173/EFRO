@@ -364,6 +364,7 @@
 
         function loadCharacter(userName, listItem) {
             clearCurrentBotMessage();
+            messages
             const characterData = localStorage.getItem('chatbotCharacter_' + userName);
             if (characterData) {
                 settings = JSON.parse(characterData);
@@ -457,7 +458,7 @@ function extractValue(jsonString, keyword) {
 
         function updateSettings() {
             
-            if (messagessent.value > 2) {
+            if (messagessent.value > 8) {
                 settings.persona = document.getElementById('persona').value;
                 settings.context = document.getElementById('context').value;
                 settings.greeting = '';
