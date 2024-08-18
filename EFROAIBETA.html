@@ -186,6 +186,7 @@
         <div id="upload-container">
             <input type="file" id="upload-json" accept=".json" />
             <button onclick="uploadCharacter()">Upload Character</button>
+            <button onclick="downloadJSONConfig()">Download JSON Config</button>
         </div>
     </div>
 
@@ -355,7 +356,7 @@
             selectedItem.classList.add('selected');
         }
 
-        function uploadCharacter() {
+function uploadCharacter() {
     const fileInput = document.getElementById('upload-json');
     const file = fileInput.files[0];
     if (file) {
@@ -385,6 +386,37 @@
     } else {
         alert('Please select a file to upload.');
     }
+}
+
+function downloadJSONConfig() {
+    const persona = document.getElementById('persona').value;
+    const context = document.getElementById('context').value;
+    const greeting = document.getElementById('greeting').value;
+    const temperature = parseFloat(document.getElementById('temperature').value) || 0.5;
+
+    // Construct JSON object
+    const jsonData = {
+        char_persona: persona,
+        char_greeting: greeting,
+        world_scenario: context,
+        temperature: temperature
+    };
+
+    // Convert JSON object to string
+    const jsonString = JSON.stringify(jsonData, null, 4);
+
+    // Create a blob with the JSON string
+    const blob = new Blob([jsonString], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'character-config.json';
+
+    // Trigger the download
+    a.click();
+
+    // Clean up
+    URL.revokeObjectURL(url);
 }
 
 // Helper function to extract values based on a keyword
