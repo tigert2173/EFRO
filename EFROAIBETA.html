@@ -210,7 +210,29 @@
             width: 100%;
             text-align: center;
         }
+        /* Simple styling to hide expert settings initially */
+        #expert-settings {
+            display: none; /* Hidden by default */
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            background-color: #000000;
+            width: 100%;
+            max-width: 700px;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            margin-bottom: 20px;
+        }
+        #last#sentences {
+            width: 100%;
+        }
 
+        #last#sentencesValue {
+            display: inline-block;
+            width: 100%;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -292,9 +314,35 @@
                 <button onclick="saveCharacter()">Save Character</button>
                 <button onclick="updateSettings()">Update Settings</button>
             </div>
+            <div class="setting">
+                <label for="advanced-debugging">Debugging</label>
+                <textarea id="advanced-debugging" value="" rows="20" cols="93" readonly></textarea>
+            </div>
+            <!-- Checkbox -->
+            <label for="show-expert">Show Expert Settings:</label>
+            <input type="checkbox" id="show-expert" onchange="toggleExpertSettings()">
         </div>
 
         <div id="api-status">API Status: <span id="api-status-text" class="status-checking">Checking...</span></div>
+
+        <!-- Expert Settings Section -->
+    <div id="expert-settings">
+        <h3>Expert Settings</h3>
+        <!-- Expert settings go here -->
+        <label for="ESettingslastNUMsentencesSlider">How many sentences to use from most recent context:</label>
+        <input type="range" id="ESettingslastNUMsentencesSlider" min="1" max="50" step="1" value="25">
+        <span id="ESettingslastNUMsentencesValue">Last 25 Sentences</span>
+
+        <label for="ESettingsRandomNUMsentencesSlider">Number of Random Sentences to select from context:</label>
+        <input type="range" id="ESettingsRandomNUMsentencesSlider" min="1" max="50" step="1" value="10">
+        <span id="ESettingsRandomNUMsentencesValue">Select 10 Random Sentences</span>
+
+        <label for="setting2">Expert Setting 2:</label>
+        <input type="text" id="setting2"><br><br>
+
+        <label for="setting3">Expert Setting 3:</label>
+        <input type="text" id="setting3"><br><br>
+    </div>
 
         <br>
         <a class="back-link" href="/EFRO/PrivacyPolicy.html">Privacy Policy</a>
@@ -302,6 +350,27 @@
     </div>
 
     <script>
+        document.addEventListener('DOMContentLoaded', () => {
+        const ESettingslastNUMsentencesSlider = document.getElementById('ESettingslastNUMsentencesSlider');
+        const ESettingslastNUMsentencesValue = document.getElementById('ESettingslastNUMsentencesValue');
+
+        ESettingslastNUMsentencesSlider.addEventListener('input', () => {
+        ESettingslastNUMsentencesValue.textContent = "Last " + ESettingslastNUMsentencesSlider.value + " Sentences";
+        // Here you can add code to handle the setting change
+        // For example, updating a global setting or sending it to a server
+        });
+    });
+    document.addEventListener('DOMContentLoaded', () => {
+        const ESettingsRandomNUMsentencesSlider = document.getElementById('ESettingsRandomNUMsentencesSlider');
+        const ESettingsRandomNUMsentencesValue = document.getElementById('ESettingsRandomNUMsentencesValue');
+
+        ESettingsRandomNUMsentencesSlider.addEventListener('input', () => {
+        ESettingsRandomNUMsentencesValue.textContent = "Select " + ESettingsRandomNUMsentencesSlider.value + " Random Sentences";
+        // Here you can add code to handle the setting change
+        // For example, updating a global setting or sending it to a server
+        });
+    });
+
         document.addEventListener('DOMContentLoaded', () => {
         const SettingsMaxTokensSlider = document.getElementById('SettingsMaxTokensSlider');
         const SettingsMaxTokensValue = document.getElementById('SettingsMaxTokensValue');
@@ -313,6 +382,17 @@
         });
     });
 
+    function toggleExpertSettings() {
+            const checkbox = document.getElementById('show-expert');
+            const expertSettings = document.getElementById('expert-settings');
+
+            // If the checkbox is checked, display the expert settings
+            if (checkbox.checked) {
+                expertSettings.style.display = 'block';
+            } else {
+                expertSettings.style.display = 'none';
+            }
+        }
     </script>
     <script>
         let settings = {
@@ -323,7 +403,7 @@
             model: 'https://mcdonald-eminem-inc-cited.trycloudflare.com',
    //         charName: ''
         };
-
+        
         function updateCharacterList() {
             const characterList = document.getElementById('character-list');
             characterList.innerHTML = '';
@@ -498,6 +578,7 @@ function extractValue(jsonString, keyword) {
 
         function updateSettings() {
             checkAPIStatus();
+            processMessageDataImportance();
             if (messagessent.value > 8) {
                 settings.persona = document.getElementById('persona').value;
                 settings.context = document.getElementById('context').value;
@@ -510,6 +591,11 @@ function extractValue(jsonString, keyword) {
                 settings.greeting = document.getElementById('greeting').value;
                 settings.temperature = parseFloat(document.getElementById('temperature').value);
                 settings.model = document.getElementById('model').value;
+
+                //Controlled Message Data Importance
+                messagedataimportance.lusermsg = lastUserMessage;
+
+                //document.getElementById('advanced-debugging').value = messagedataimportance.lusermsg;
             }
         }
 
@@ -522,6 +608,40 @@ function clearCurrentBotMessage() {
         currentBotMessageElement.innerHTML = ''; // Clear the existing content
         lastBotMessage = ''; // Clear the last bot message content
     }
+}
+
+let messagedataimportance = {
+            lusermsg: '',
+            messagehistory: '',
+            messagehistorytrimmed: '',
+        };
+
+function processMessageDataImportance() {
+    let fullText = messagedataimportance.messagehistory;
+
+
+    // Step 1: Split the message history into sentences
+    let sentences = fullText.split(/(?<=\.)\s+/); // Splits by sentence, assuming period ends a sentence
+
+    // Step 2: Get the last # sentences
+    let lastSentences = sentences.slice(-ESettingslastNUMsentencesSlider.value).join(' '); // Take the last 5 sentences
+    // Step 3: Get the sentences before the last 5 sentences
+    let remainingSentences = sentences.slice(0, sentences.length - ESettingslastNUMsentencesSlider.value) // Exclude the last # sentences
+        .filter(sentence => !sentence.includes('◀') && !sentence.includes('▶')); // Exclude sentences with ◀ or ▶
+    // Step 4: Randomly select 10 sentences from the remaining sentences
+    let selectedSentences = [];
+    for (let i = 0; i < Math.min(ESettingsRandomNUMsentencesSlider.value, remainingSentences.length); i++) {
+        const randomIndex = Math.floor(Math.random() * remainingSentences.length);
+        selectedSentences.push(remainingSentences[randomIndex]);
+        remainingSentences.splice(randomIndex, 1); // Remove the selected sentence from the list to avoid repetition
+    }
+
+    // Step 5: Combine the last 5 sentences and the randomly selected sentences
+    let finalText = selectedSentences.join(' ') + "\n\n" + lastSentences;
+
+    // Step 6: Display or use the result
+    messagedataimportance.messagehistorytrimmed = finalText;
+    document.getElementById('advanced-debugging').value = messagedataimportance.messagehistorytrimmed;
 }
 
 
@@ -551,18 +671,22 @@ async function sendMessage() {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                model: settings.model,
+                //model: settings.model,
                 messages: [
-                    { role: 'system', content: settings.greeting },
-                    { role: 'user', content: message },
+                   // { role: 'user', content: messagedataimportance.lusermsg },
+                   // { role: 'system', content: settings.greeting },
                     { role: 'system', content: settings.persona },
-                    { role: 'system', content: settings.context }
+                    { role: 'system', content: settings.context },
+                    { role: 'system', content: messagedataimportance.messagehistorytrimmed },
+                    { role: 'user', content: message }
                 ],
                 max_tokens: SettingsMaxTokensSlider.value,
                 stream: true,
                 temperature: settings.temperature
             })
         });
+
+        document.getElementById('advanced-debugging').value = messagedataimportance.messagehistorytrimmed;
 
         if (response.body) {
             const reader = response.body.getReader();
@@ -699,6 +823,8 @@ function displayMessage(content, sender, isFinal = false) {
     }
 
     // chatContainer.scrollTop = chatContainer.scrollHeight; //Scrolls to bottom as new message is generated.
+    //document.getElementById('advanced-debugging').value = chatContainer.textContent;
+    messagedataimportance.messagehistory = chatContainer.textContent;
 }
 let isResend = false;
 
