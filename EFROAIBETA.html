@@ -336,7 +336,7 @@
         <label for="ESettingsRandomNUMsentencesSlider">Number of Random Sentences to select from context:</label>
         <input type="range" id="ESettingsRandomNUMsentencesSlider" min="1" max="50" step="1" value="10">
         <span id="ESettingsRandomNUMsentencesValue">Select 10 Random Sentences</span>
-
+        <br><i>    Older Content has a lower and lower chance of being selected</i>
         <label for="setting2">Expert Setting 2:</label>
         <input type="text" id="setting2"><br><br>
 
@@ -400,7 +400,7 @@
             context: '',
             greeting: '',
             temperature: 0.5,
-            model: 'https://mcdonald-eminem-inc-cited.trycloudflare.com',
+            model: 'https://nicaragua-specifies-beneath-texture.trycloudflare.com',
    //         charName: ''
         };
         
@@ -616,7 +616,7 @@ let messagedataimportance = {
             messagehistorytrimmed: '',
         };
 
-function processMessageDataImportance() {
+        function processMessageDataImportance() {
     const chatContainer = document.getElementById('chat-container');
     messagedataimportance.messagehistory = chatContainer.textContent;
     let fullText = messagedataimportance.messagehistory;
@@ -625,26 +625,58 @@ function processMessageDataImportance() {
     let sentences = fullText.split(/(?<=\.)\s+/); // Splits by sentence, assuming period ends a sentence
 
     // Step 2: Get the last # sentences
-    let lastSentences = sentences.slice(-ESettingslastNUMsentencesSlider.value).join(' '); // Take the last 5 sentences
-    // Step 3: Get the sentences before the last 5 sentences
-    let remainingSentences = sentences.slice(0, sentences.length - ESettingslastNUMsentencesSlider.value) // Exclude the last # sentences
+    let numLastSentences = parseInt(ESettingslastNUMsentencesSlider.value, 10);
+    let lastSentences = sentences.slice(-numLastSentences).join(' '); // Take the last X sentences
+
+    // Step 3: Get the sentences before the last X sentences
+    let remainingSentences = sentences.slice(0, sentences.length - numLastSentences)
         .filter(sentence => !sentence.includes('◀') && !sentence.includes('▶')); // Exclude sentences with ◀ or ▶
-    // Step 4: Randomly select 10 sentences from the remaining sentences
-    let selectedSentences = [];
-    for (let i = 0; i < Math.min(ESettingsRandomNUMsentencesSlider.value, remainingSentences.length); i++) {
-        const randomIndex = Math.floor(Math.random() * remainingSentences.length);
-        selectedSentences.push(remainingSentences[randomIndex]);
-        remainingSentences.splice(randomIndex, 1); // Remove the selected sentence from the list to avoid repetition
+
+    // Step 4: Generate weights for sentences, inversely proportional to their index
+    let weightedSentences = remainingSentences.map((sentence, index) => ({
+        sentence: sentence,
+        weight: remainingSentences.length - index
+    }));
+    let totalWeight = weightedSentences.reduce((a, b) => a + b.weight, 0);
+
+    // Function to select a weighted random item
+    function getRandomWeightedIndex() {
+        let random = Math.random() * totalWeight;
+        for (let i = 0; i < weightedSentences.length; i++) {
+            if (random < weightedSentences[i].weight) {
+                return i;
+            }
+            random -= weightedSentences[i].weight;
+        }
+        return weightedSentences.length - 1; // Fallback to the last item
     }
 
-    // Step 5: Combine the last 5 sentences and the randomly selected sentences
-    let finalText = selectedSentences.join(' ') + "\n\n" + lastSentences;
+    // Debugging: Log weights and sentences
+    console.log('Weighted Sentences:', weightedSentences);
 
-    // Step 6: Display or use the result
+    // Step 5: Randomly select X sentences from the weighted list
+    let numRandomSentences = parseInt(ESettingsRandomNUMsentencesSlider.value, 10);
+    let selectedSentences = [];
+    for (let i = 0; i < Math.min(numRandomSentences, weightedSentences.length); i++) {
+        const index = getRandomWeightedIndex();
+        selectedSentences.push(weightedSentences[index]);
+        console.log(`Selected Sentence: "${weightedSentences[index].sentence}" with weight ${weightedSentences[index].weight}`);
+
+        // Remove selected sentence and corresponding weight from the list to avoid repetition
+        weightedSentences.splice(index, 1);
+        totalWeight = weightedSentences.reduce((a, b) => a + b.weight, 0); // Recalculate total weight
+    }
+
+    // Sort selected sentences by their weights
+    selectedSentences.sort((b, a) => b.weight - a.weight);
+
+    // Step 6: Combine the last X sentences and the randomly selected sentences
+    let finalText = selectedSentences.map(item => item.sentence).join(' ') + "\n\n" + lastSentences;
+
+    // Step 7: Display or use the result
     messagedataimportance.messagehistorytrimmed = finalText;
     //document.getElementById('advanced-debugging').value = messagedataimportance.messagehistorytrimmed;
 }
-
 
 async function sendMessage() {   
     processMessageDataImportance(); 
@@ -664,7 +696,7 @@ async function sendMessage() {
     }
 
     if (document.getElementById('model').value == '') {
-        document.getElementById('model').value = 'https://mcdonald-eminem-inc-cited.trycloudflare.com';
+        document.getElementById('model').value = 'https://nicaragua-specifies-beneath-texture.trycloudflare.com';
     }
     try {
         updateSettings();
