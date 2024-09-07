@@ -554,9 +554,9 @@ async function sendMessage() {
                 model: settings.model,
                 messages: [
                     { role: 'system', content: settings.greeting },
+                    { role: 'user', content: message },
                     { role: 'system', content: settings.persona },
-                    { role: 'system', content: settings.context },
-                    { role: 'user', content: message }
+                    { role: 'system', content: settings.context }
                 ],
                 max_tokens: SettingsMaxTokensSlider.value,
                 stream: true,
