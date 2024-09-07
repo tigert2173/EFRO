@@ -617,8 +617,9 @@ let messagedataimportance = {
         };
 
 function processMessageDataImportance() {
+    const chatContainer = document.getElementById('chat-container');
+    messagedataimportance.messagehistory = chatContainer.textContent;
     let fullText = messagedataimportance.messagehistory;
-
 
     // Step 1: Split the message history into sentences
     let sentences = fullText.split(/(?<=\.)\s+/); // Splits by sentence, assuming period ends a sentence
@@ -641,11 +642,13 @@ function processMessageDataImportance() {
 
     // Step 6: Display or use the result
     messagedataimportance.messagehistorytrimmed = finalText;
-    document.getElementById('advanced-debugging').value = messagedataimportance.messagehistorytrimmed;
+    //document.getElementById('advanced-debugging').value = messagedataimportance.messagehistorytrimmed;
 }
 
 
-async function sendMessage() {
+async function sendMessage() {   
+    processMessageDataImportance(); 
+    document.getElementById('advanced-debugging').value = messagedataimportance.messagehistorytrimmed;
     const userInput = document.getElementById('user-input');
     const message = userInput.value.trim();
     if (!message) return;
@@ -685,8 +688,6 @@ async function sendMessage() {
                 temperature: settings.temperature
             })
         });
-
-        document.getElementById('advanced-debugging').value = messagedataimportance.messagehistorytrimmed;
 
         if (response.body) {
             const reader = response.body.getReader();
@@ -730,6 +731,8 @@ async function sendMessage() {
 function regenerateMessage() {
     if (lastUserMessage) {
         settings.context = settings.context.replace(lastBotMessage, '').trim();
+        //messagedataimportance.historytrimmed = messagedataimportance.messagehistorytrimmed.replace(lastBotMessage, '').trim();
+        //processMessageDataImportance();
         clearCurrentBotMessage();
         isResend = true;
         document.getElementById('user-input').value = lastUserMessage;
@@ -824,7 +827,8 @@ function displayMessage(content, sender, isFinal = false) {
 
     // chatContainer.scrollTop = chatContainer.scrollHeight; //Scrolls to bottom as new message is generated.
     //document.getElementById('advanced-debugging').value = chatContainer.textContent;
-    messagedataimportance.messagehistory = chatContainer.textContent;
+    
+    //messagedataimportance.messagehistory = chatContainer.textContent;
 }
 let isResend = false;
 
@@ -832,6 +836,7 @@ function regenerateMessage() {
     // Remove the last bot message from the context
     if (lastUserMessage) {
         settings.context = settings.context.replace(lastBotMessage, '').trim(); // Use last bot message
+
         clearCurrentBotMessage(); // Clear the last bot message
         isResend = true; // Set flag to indicate resend
         document.getElementById('user-input').value = lastUserMessage;
