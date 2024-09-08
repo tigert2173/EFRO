@@ -801,7 +801,7 @@ function regenerateMessage() {
     if (lastUserMessage) {
         settings.context = settings.context.replace(lastBotMessage, '').trim();
         //messagedataimportance.historytrimmed = messagedataimportance.messagehistorytrimmed.replace(lastBotMessage, '').trim();
-        //processMessageDataImportance();
+        processMessageDataImportance();
         clearCurrentBotMessage();
         isResend = true;
         document.getElementById('user-input').value = lastUserMessage;
