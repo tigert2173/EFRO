@@ -708,13 +708,16 @@ function processMessageDataImportance() {
 }
 
 async function sendMessage() {   
-    processMessageDataImportance(); 
     document.getElementById('advanced-debugging').value = currentBotMessageElement.innerHTML;
     const userInput = document.getElementById('user-input');
     const message = userInput.value.trim();
     if (!message) return;
 
     if (!isResend) {
+        processMessageDataImportance(); 
+        // Update lastBotMessage to the current content
+        lastBotMsg = currentBotMessageElement.textContent || currentBotMessageElement.innerHTML;
+        console.log('Updated lastBotMsg:', lastBotMsg);
         lastUserMessage = message; // Store the last user message
         messagessent = messagessent + 1;
         document.getElementById('messages-sent').value = messagessent;
@@ -801,7 +804,7 @@ function regenerateMessage() {
     if (lastUserMessage) {
         settings.context = settings.context.replace(lastBotMessage, '').trim();
         //messagedataimportance.historytrimmed = messagedataimportance.messagehistorytrimmed.replace(lastBotMessage, '').trim();
-        processMessageDataImportance();
+        //processMessageDataImportance();
         clearCurrentBotMessage();
         isResend = true;
         document.getElementById('user-input').value = lastUserMessage;
@@ -885,9 +888,6 @@ function displayMessage(content, sender, isFinal = false) {
         if (isFinal) {
             botMessages.push(currentBotMessageElement.innerHTML);
             currentBotMessageIndex = botMessages.length - 1;
-            // Update lastBotMessage to the current content
-            lastBotMsg = currentBotMessageElement.textContent || currentBotMessageElement.innerHTML;
-            console.log('Updated lastBotMsg:', lastBotMsg);
         }
 
         // Update arrow states
