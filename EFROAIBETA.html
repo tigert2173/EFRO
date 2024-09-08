@@ -578,7 +578,7 @@ function extractValue(jsonString, keyword) {
 
         function updateSettings() {
             checkAPIStatus();
-            processMessageDataImportance();
+            //processMessageDataImportance();
             if (messagessent.value > 8) {
                 settings.persona = document.getElementById('persona').value;
                 settings.context = document.getElementById('context').value;
@@ -616,13 +616,36 @@ let messagedataimportance = {
             messagehistorytrimmed: '',
         };
 
-        function processMessageDataImportance() {
+function getAllMessagesExceptLast() {
     const chatContainer = document.getElementById('chat-container');
-    messagedataimportance.messagehistory = chatContainer.textContent;
+    
+    // Select all message elements
+    const messageElements = chatContainer.querySelectorAll('.message');
+    
+    // If there are less than two messages, return an empty string
+    if (messageElements.length < 2) {
+        return '';
+    }
+
+    // Get all messages except the last one
+    const messagesExceptLast = Array.from(messageElements)
+        .slice(0, -1) // Exclude the last message
+        .map(message => message.textContent.trim()) // Get text content of each message
+        .join(' '); // Join all messages into a single string
+
+    return messagesExceptLast;
+}
+
+function processMessageDataImportance() {
+    const chatContainer = document.getElementById('chat-container');
+   // messagedataimportance.messagehistory = chatContainer.textContent;
+    messagedataimportance.messagehistory = getAllMessagesExceptLast();
+    console.log(messagedataimportance.messagehistory);
     let fullText = messagedataimportance.messagehistory;
 
     // Step 1: Split the message history into sentences
-    let sentences = fullText.split(/(?<=\.)\s+/); // Splits by sentence, assuming period ends a sentence
+    //let sentences = fullText.split(/(?<=\.)\s+/); // Splits by sentence, assuming period ends a sentence
+    let sentences = fullText.split(/(?<=[.!?])\s+(?!\.\.\.)/); //"This is a sentence! And this is another? But this one... keeps going."
 
     // Step 2: Get the last # sentences
     let numLastSentences = parseInt(ESettingslastNUMsentencesSlider.value, ESettingslastNUMsentencesSlider.value);
@@ -630,7 +653,13 @@ let messagedataimportance = {
 
     // Step 3: Get the sentences before the last X sentences
     let remainingSentences = sentences.slice(0, sentences.length - numLastSentences)
-        .filter(sentence => !sentence.includes('◀') && !sentence.includes('▶')); // Exclude sentences with ◀ or ▶
+        .filter(sentence => !sentence.includes('◀') && !sentence.includes('▶')); // Exclude sentences with ◀ or ▶    
+
+    // Filter out any sentences containing the last bot message
+    if (lastBotMsg) {
+        remainingSentences = remainingSentences.filter(sentences => !sentences.includes(lastBotMsg));
+        console.log("Removed: " + sentences + " || " + lastBotMsg)
+    }
 
     // Step 4: Generate weights for sentences, inversely proportional to their index
     let weightedSentences = remainingSentences.map((sentence, index) => ({
@@ -655,7 +684,7 @@ let messagedataimportance = {
     console.log('Weighted Sentences:', weightedSentences);
 
     // Step 5: Randomly select X sentences from the weighted list
-    let numRandomSentences = parseInt(ESettingsRandomNUMsentencesSlider.value, 10);
+    let numRandomSentences = parseInt(ESettingsRandomNUMsentencesSlider.value, ESettingsRandomNUMsentencesSlider.value);
     let selectedSentences = [];
     for (let i = 0; i < Math.min(numRandomSentences, weightedSentences.length); i++) {
         const index = getRandomWeightedIndex();
@@ -680,7 +709,7 @@ let messagedataimportance = {
 
 async function sendMessage() {   
     processMessageDataImportance(); 
-    document.getElementById('advanced-debugging').value = messagedataimportance.messagehistorytrimmed;
+    document.getElementById('advanced-debugging').value = currentBotMessageElement.innerHTML;
     const userInput = document.getElementById('user-input');
     const message = userInput.value.trim();
     if (!message) return;
@@ -695,31 +724,39 @@ async function sendMessage() {
         currentBotMessageElement = null;
     }
 
+    lastBotMsg = lastBotMsg ? lastBotMsg : settings.greeting; // Fallback to empty string if null
+
     if (document.getElementById('model').value == '') {
         document.getElementById('model').value = 'https://nicaragua-specifies-beneath-texture.trycloudflare.com';
     }
     try {
         updateSettings();
+        const requestData = {
+            messages: [
+                  // { role: 'user', content: messagedataimportance.lusermsg },
+                //{ role: 'system', content: settings.greeting },
+                { role: 'system', content: settings.persona },
+                { role: 'system', content: settings.context },
+                { role: 'system', content: messagedataimportance.messagehistorytrimmed },
+                { role: 'assistant', content: lastBotMsg },
+                { role: 'user', content: message }
+            ],
+            max_tokens: SettingsMaxTokensSlider.value,
+            stream: true,
+            temperature: settings.temperature
+        };
+
+        // Log the request body to the console for debugging
+        console.log('Request Data:', JSON.stringify(requestData, null, 2));
+
         const response = await fetch(document.getElementById('model').value + '/v1/chat/completions', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                //model: settings.model,
-                messages: [
-                   // { role: 'user', content: messagedataimportance.lusermsg },
-                   // { role: 'system', content: settings.greeting },
-                    { role: 'system', content: settings.persona },
-                    { role: 'system', content: settings.context },
-                    { role: 'system', content: messagedataimportance.messagehistorytrimmed },
-                    { role: 'user', content: message }
-                ],
-                max_tokens: SettingsMaxTokensSlider.value,
-                stream: true,
-                temperature: settings.temperature
-            })
+            body: JSON.stringify(requestData)
         });
+
 
         if (response.body) {
             const reader = response.body.getReader();
@@ -796,14 +833,16 @@ let userName = '{{user}}';
 let currentBotMessageElement = null;
 let botMessages = []; // Array to store bot messages
 let currentBotMessageIndex = -1; // Index to track current bot message
+let lastBotMsg = null;
 
 function displayMessage(content, sender, isFinal = false) {
     
     userName = document.getElementById('user-name').value.trim(); 
     if (!userName) { userName = "{{user}}" }
 
-    const chatContainer = document.getElementById('chat-container');
-    const sanitizedContent = content
+   const chatContainer = document.getElementById('chat-container');
+   const sanitizedContent = content
+        .replace(/([.!?])(?!\.\.\.)(\s*)/g, "$1 ") // Ensure single space after . ? !
         .replace(/\\n/g, '<br>') // Convert literal \n to <br>
         .replace(/\\(?!n)/g, '') // Remove backslashes not followed by n
         .replace(/\n/g, '<br>') // Convert newline characters to <br> (if needed)
@@ -846,6 +885,9 @@ function displayMessage(content, sender, isFinal = false) {
         if (isFinal) {
             botMessages.push(currentBotMessageElement.innerHTML);
             currentBotMessageIndex = botMessages.length - 1;
+            // Update lastBotMessage to the current content
+            lastBotMsg = currentBotMessageElement.textContent || currentBotMessageElement.innerHTML;
+            console.log('Updated lastBotMsg:', lastBotMsg);
         }
 
         // Update arrow states
@@ -861,6 +903,7 @@ function displayMessage(content, sender, isFinal = false) {
     //document.getElementById('advanced-debugging').value = chatContainer.textContent;
     
     //messagedataimportance.messagehistory = chatContainer.textContent;
+    const lastBotMessageElement = chatContainer.querySelector('.message.bot:last-child'); // Select the last bot message element
 }
 let isResend = false;
 
@@ -887,6 +930,11 @@ function navigateBotMessages(direction) {
         currentBotMessageIndex = newIndex;
         const content = botMessages[currentBotMessageIndex];
         currentBotMessageElement.innerHTML = content;
+
+
+        // Update lastBotMessage to the current content
+        lastBotMsg = currentBotMessageElement.textContent || currentBotMessageElement.innerHTML;
+        console.log('Updated lastBotMsg (navigated):', lastBotMsg);
 
         // Update arrow states
         updateArrowStates();
