@@ -961,8 +961,6 @@ function updateArrowStates() {
     </script>
 </body>
 </html>
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1014,21 +1012,29 @@ function updateArrowStates() {
             color: #e0e0e0; /* Light color for sub-message */
         }
 
-        .close-btn {
+        .close-btn, .proceed-btn {
             position: absolute;
             top: 10px;
-            right: 10px;
-            background-color: #ff5722; /* Close button color */
+            font-size: 1.5em;
             border: none;
             border-radius: 50%;
             color: #fff;
-            font-size: 1.5em;
-            width: 30px;
-            height: 30px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
+            width: 30px;
+            height: 30px;
+        }
+
+        .close-btn {
+            right: 50px;
+            background-color: #ff5722; /* Close button color */
+        }
+
+        .proceed-btn {
+            right: 10px;
+            background-color: #4caf50; /* Proceed button color */
         }
 
         .content {
@@ -1051,6 +1057,7 @@ function updateArrowStates() {
 
     <div id="maintenanceMessage" class="maintenance">
         <button class="close-btn" onclick="closeMaintenance()">×</button>
+        <button class="proceed-btn" onclick="proceed()">→</button>
         <p>🚧 We are currently undergoing maintenance. Please check back later! 🚧</p>
         <div id="subMessage" class="sub-message"></div>
     </div>
@@ -1063,3 +1070,4 @@ function updateArrowStates() {
     <script src="maintenance.js"></script>
 </body>
 </html>
+
