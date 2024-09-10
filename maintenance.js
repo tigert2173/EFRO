@@ -27,5 +27,12 @@ function closeMaintenance() {
     document.getElementById('content').style.display = 'block';
 }
 
+// Function to proceed (if needed)
+function proceed() {
+    // Handle what happens when 'Proceed' is clicked
+    // For example, redirecting to another page or showing another message
+    closeMaintenance(); // For demonstration, we use closeMaintenance to hide the overlay
+}
+
 // Check maintenance mode on page load
 window.onload = checkMaintenanceMode;
