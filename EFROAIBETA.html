@@ -1008,6 +1008,12 @@ function updateArrowStates() {
             z-index: 1000; /* On top of the overlay */
         }
 
+        .maintenance .sub-message {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #e0e0e0; /* Light color for sub-message */
+        }
+
         .close-btn {
             position: absolute;
             top: 10px;
@@ -1046,7 +1052,14 @@ function updateArrowStates() {
     <div id="maintenanceMessage" class="maintenance">
         <button class="close-btn" onclick="closeMaintenance()">×</button>
         <p>🚧 We are currently undergoing maintenance. Please check back later! 🚧</p>
+        <div id="subMessage" class="sub-message"></div>
     </div>
+
+    <div id="content" class="content">
+        <h1>Welcome to the Website</h1>
+        <p>This is the main content of the site. Enjoy browsing!</p>
+    </div>
+
     <script src="maintenance.js"></script>
 </body>
 </html>
