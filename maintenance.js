@@ -1,5 +1,5 @@
 // Maintenance mode toggle (set to 'true' for maintenance mode)
-var maintenanceMode = true; // Change this to true to enable maintenance mode
+var maintenanceMode = false; // Change this to true to enable maintenance mode
 
 // Function to fetch or set the maintenance message
 function getMaintenanceMessage() {
