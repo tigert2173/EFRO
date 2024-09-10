@@ -41,4 +41,4 @@ function closeMaintenance() {
 }
 
 // Check maintenance mode on page load
-window.onload = checkMaintenanceMode;
+window.onload = getMaintenanceMessage();
