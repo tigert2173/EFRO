@@ -2,7 +2,7 @@
 var maintenanceMode = true; // Change this to true to enable maintenance mode
 
 // Sub-message to display
-var subMessageText = "We will be back shortly. Thank you for your patience."; // Change this text as needed
+var subMessageText = "We'll be back soon better than ever with a character sharing page :D"; // Change this text as needed
 
 // Function to handle maintenance mode
 function checkMaintenanceMode() {
