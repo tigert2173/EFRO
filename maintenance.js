@@ -5,7 +5,7 @@ var maintenanceMode = true; // Change this to true to enable maintenance mode
 function getMaintenanceMessage() {
     // Example: fetch message from a server or configuration file
     // For simplicity, we're setting a static message here
-    return "We will be back shortly. Thank you for your patience.";
+    return "We'll be back soon better than ever with a character sharing page :D";
 }
 
 // Function to handle maintenance mode
