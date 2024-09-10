@@ -961,3 +961,68 @@ function updateArrowStates() {
     </script>
 </body>
 </html>
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maintenance Mode</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #1b1b1b; /* Dark background to complement green */
+            color: #fff; /* Text color for contrast */
+        }
+
+        .maintenance {
+            display: none;
+            text-align: center;
+            padding: 100px;
+            background-color: #2c6e49; /* Green background for maintenance message */
+            color: #fff;
+            font-size: 2em;
+            border: 1px solid #1f5a40; /* Darker green border */
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 1200px;
+            z-index: 1000;
+        }
+
+        .content {
+            display: block;
+            padding: 20px;
+            color: #ddd; /* Light text color for content */
+        }
+
+        h1 {
+            color: #4caf50; /* Vibrant green color for headings */
+        }
+
+        p {
+            color: #b0b0b0; /* Lighter color for paragraphs */
+        }
+    </style>
+</head>
+<body>
+    <div id="maintenanceMessage" class="maintenance">
+        <p>🚧 We are currently undergoing maintenance. Please check back later! 🚧</p>
+    </div>
+
+    <div id="content" class="content">
+        <h1>Welcome to the Website</h1>
+        <p>This is the main content of the site. Enjoy browsing!</p>
+    </div>
+
+    <script src="maintenance.js"></script>
+</body>
+</html>
