@@ -1,19 +1,26 @@
 // Maintenance mode toggle (set to 'true' for maintenance mode)
 var maintenanceMode = true; // Change this to true to enable maintenance mode
 
-// Sub-message to display
-var subMessageText = "We'll be back soon better than ever with a character sharing page :D"; // Change this text as needed
+// Function to fetch or set the maintenance message
+function getMaintenanceMessage() {
+    // Example: fetch message from a server or configuration file
+    // For simplicity, we're setting a static message here
+    return "We will be back shortly. Thank you for your patience.";
+}
 
 // Function to handle maintenance mode
 function checkMaintenanceMode() {
     if (maintenanceMode) {
+        // Show overlay and maintenance message
         document.getElementById('overlay').style.display = 'block';
         document.getElementById('maintenanceMessage').style.display = 'block';
         document.getElementById('content').style.display = 'none';
 
-        // Set the sub-message text
-        document.getElementById('subMessage').textContent = subMessageText;
+        // Update maintenance message and sub-message
+        var maintenanceMessage = getMaintenanceMessage();
+        document.getElementById('subMessage').textContent = maintenanceMessage;
     } else {
+        // Hide overlay and maintenance message
         document.getElementById('overlay').style.display = 'none';
         document.getElementById('maintenanceMessage').style.display = 'none';
         document.getElementById('content').style.display = 'block';
