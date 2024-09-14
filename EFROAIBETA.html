@@ -393,6 +393,7 @@
     async function checkAPIStatusDropdown(apiUrl) {
             try {
                 const response = await fetch(apiUrl + '/v1/internal/model/info');
+                console.log(apiUrl);
                 if (response.ok) {
                     return 'Up and Running';
                 } else {
@@ -405,7 +406,7 @@
 
         document.addEventListener('DOMContentLoaded', async () => {
             try {
-                const response = await fetch('https://joining-sbjct-cnet-gs.trycloudflare.com');
+                const response = await fetch('http://api.botbridge.net:3000/admin/api-links');
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
